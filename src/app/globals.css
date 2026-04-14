@@ -1,0 +1,349 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-3xl: 120rem;
+}
+@layer base {
+  :root {
+    /* background */
+    --bg-primary: #faf7f6;
+    --bg-primary-inverse: #121212;
+    --bg-secondary: #f1f1f1;
+
+    /* text */
+    --text-primary: #121212;
+    --text-primary-inverse: #e7e7e7;
+    --text-secondary: #515151;
+
+    /* border */
+    --border: #aaa;
+
+    /* fixed in light and dark as well */
+    --color-landing: #000;
+    --color-primary-fixed: #e7e7e7;
+    --border-fixed: #232323;
+    --light-text-fixed: #888;
+    --rad: 36px;
+    --animation-duration: 1500ms;
+    --duration: 300ms;
+  }
+
+  .dark {
+    /* background */
+    --bg-primary: #0f0f0f;
+    --bg-primary-inverse: #f1f1f1;
+    --bg-secondary: #030303;
+
+    /* text */
+    --text-primary: #e7e7e7;
+    --text-primary-inverse: #121212;
+    --text-secondary: #bbb;
+
+    /* border */
+    --border: #232323;
+  }
+}
+
+/* =============== Rules =============== */
+body {
+  background-color: var(--bg-primary);
+}
+
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Works in Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+img {
+  user-select: none;
+  pointer-events: none;
+}
+
+svg {
+  transition: var(--duration);
+}
+
+section {
+  position: relative;
+  min-height: 100vh;
+  z-index: 20;
+  background-color: var(--bg-secondary);
+}
+
+li {
+  list-style: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  text-transform: uppercase;
+  font-family: var(--font-primary);
+}
+
+h1 {
+  color: var(--text-primary);
+}
+
+p {
+  line-height: 1.6;
+}
+
+h2,
+h3,
+p {
+  color: var(--text-secondary);
+  font-family: var(--font-secondary);
+}
+
+button {
+  font-family: var(--font-primary);
+  cursor: pointer;
+}
+
+button:hover .button-arrow-up-right:first-child {
+  transform: translateY(-1.75rem) translateX(1.75rem);
+}
+button .button-arrow-up-right:last-child {
+  transform: translateY(1.75rem) translateX(-1.75rem);
+}
+button:hover .button-arrow-up-right:last-child {
+  transform: translate(0);
+}
+button:hover .button-arrow-right {
+  transform: rotate(90deg);
+}
+
+/* =============== Rules =============== */
+
+/* =============== Components =============== */
+.fill-text {
+  position: relative;
+  display: inline;
+  color: var(--text-primary);
+  -webkit-text-fill-color: rgb(0 0 0 / 7.5%);
+  -webkit-background-clip: text;
+  background-repeat: no-repeat;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 100%;
+  will-change: background-size;
+}
+
+.dark .fill-text {
+  -webkit-text-fill-color: rgb(255 255 255 / 7.5%);
+}
+
+.circular-text text {
+  font-family: var(--font-primary);
+  letter-spacing: 6px;
+  font-variant-ligatures: none;
+  animation: rotation 25s linear infinite;
+  transform-origin: center center;
+}
+
+.circular-text .textcircle {
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+  transform-origin: center center;
+}
+/* =============== Components =============== */
+
+/* =============== Utilities =============== */
+@layer utilities {
+  .text-primary {
+    @apply text-(--text-primary);
+  }
+
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+
+  .position-center {
+    @apply left-1/2 top-1/2 -translate-1/2;
+  }
+
+  .text-query {
+    @apply lg:text-start text-center;
+  }
+
+  .padding-query {
+    @apply lg:p-16 p-8;
+  }
+
+  .justify-query {
+    @apply lg:justify-start justify-center;
+  }
+
+  .items-query {
+    @apply lg:items-start items-center;
+  }
+
+  .duration {
+    @apply duration-(--duration);
+  }
+
+  .rad {
+    @apply rounded-(--rad);
+  }
+}
+
+.outlinedText {
+  text-shadow: 1px 1px 0 var(--text-primary), -1px 1px 0 var(--text-primary),
+    1px -1px 0 var(--text-primary), -1px -1px 0 var(--text-primary);
+}
+
+.border-primary {
+  border-color: var(--border);
+  transition: border-color var(--duration) ease;
+}
+
+.border-primary:hover {
+  border-color: var(--text-primary);
+}
+
+.mask-x {
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0) 0%,
+    rgb(0, 0, 0) 10%,
+    rgb(0, 0, 0) 90%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.animation-duration {
+  transition-duration: var(--animation-duration);
+}
+
+.font-primary {
+  font-family: var(--font-primary) !important;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary) !important;
+}
+/* =============== Utilities =============== */
+
+/* =============== Animations =============== */
+.scale-up {
+  animation: scale-up var(--animation-duration) ease-in-out;
+}
+
+@keyframes scale-up {
+  0% {
+    transform: scale(0.75);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid var(--text-primary-inverse);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+.rotation {
+  animation: rotation 6s linear infinite;
+}
+
+@keyframes rotation {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.slide-down {
+  animation: slide-down var(--animation-duration) ease-out;
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.slide-up {
+  animation: slide-up var(--animation-duration) ease-out forwards;
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ===[ available-badge ]=== */
+.available-badge {
+  animation: available-badge 1s alternate infinite ease-in;
+}
+@keyframes available-badge {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.8);
+  }
+}
+/* ===[ animate-scroll ]=== */
+
+/* ===[ animate-scroll ]=== */
+.animate-scroll-x {
+  animation: scrollX linear infinite;
+}
+
+@keyframes scrollX {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-x-reverse {
+  animation: scrollXReversed linear infinite;
+}
+
+@keyframes scrollXReversed {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.ticker-wrapper {
+  contain: layout style paint;
+}
+/* ===[ animate-scroll ]=== */
+/* =============== Animations =============== */
