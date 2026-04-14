@@ -2,13 +2,56 @@ import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://www.ilyaschnf.tech",
+  "https://ilyaschnf.tech",
+];
+
 type ContactBody = {
   name?: string;
   email?: string;
   message?: string;
 };
 
+function getCorsHeaders(origin: string | null) {
+  const isAllowed = origin && allowedOrigins.includes(origin);
+
+  return {
+    "Access-Control-Allow-Origin": isAllowed ? origin : allowedOrigins[0],
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+}
+
+export async function OPTIONS(request: Request) {
+  const origin = request.headers.get("origin");
+  const headers = getCorsHeaders(origin);
+
+  return new Response(null, {
+    status: 204,
+    headers,
+  });
+}
+
 export async function POST(request: Request) {
+  const origin = request.headers.get("origin");
+  const isAllowedOrigin = origin && allowedOrigins.includes(origin);
+
+  if (origin && !isAllowedOrigin) {
+    return Response.json(
+      {
+        success: false,
+        message: "Origin not allowed.",
+      },
+      {
+        status: 403,
+        headers: getCorsHeaders(origin),
+      }
+    );
+  }
+
   try {
     const body = (await request.json()) as ContactBody;
 
@@ -22,7 +65,10 @@ export async function POST(request: Request) {
           success: false,
           message: "All fields are required.",
         },
-        { status: 400 }
+        {
+          status: 400,
+          headers: getCorsHeaders(origin),
+        }
       );
     }
 
@@ -33,7 +79,10 @@ export async function POST(request: Request) {
           success: false,
           message: "Invalid email address.",
         },
-        { status: 400 }
+        {
+          status: 400,
+          headers: getCorsHeaders(origin),
+        }
       );
     }
 
@@ -47,7 +96,10 @@ export async function POST(request: Request) {
           success: false,
           message: "Email server is not configured.",
         },
-        { status: 500 }
+        {
+          status: 500,
+          headers: getCorsHeaders(origin),
+        }
       );
     }
 
@@ -84,10 +136,16 @@ ${message}
       `,
     });
 
-    return Response.json({
-      success: true,
-      message: "Message sent successfully.",
-    });
+    return Response.json(
+      {
+        success: true,
+        message: "Message sent successfully.",
+      },
+      {
+        status: 200,
+        headers: getCorsHeaders(origin),
+      }
+    );
   } catch (error) {
     console.error("CONTACT_API_ERROR", error);
 
@@ -96,7 +154,10 @@ ${message}
         success: false,
         message: "Failed to send message.",
       },
-      { status: 500 }
+      {
+        status: 500,
+        headers: getCorsHeaders(origin),
+      }
     );
   }
 }
